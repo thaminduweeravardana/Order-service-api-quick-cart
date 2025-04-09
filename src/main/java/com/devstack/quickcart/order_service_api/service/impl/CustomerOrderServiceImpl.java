@@ -48,6 +48,33 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
+    public void updateOrder(CustomerOrderRequestDto requestDto, String orderId) {
+        CustomerOrder customerOrder =
+                customerOrderRepo.findById(orderId).orElseThrow(()->new RuntimeException(String.format("Order not found with %s", orderId)));
+        customerOrder.setOrderDate(requestDto.getOrderDate());
+        customerOrder.setTotalAmount(requestDto.getTotalAmount());
+        customerOrderRepo.save(customerOrder);
+    }
+
+    @Override
+    public void manageRemark(String remark, String orderId) {
+        CustomerOrder customerOrder =
+                customerOrderRepo.findById(orderId).orElseThrow(()->new RuntimeException(String.format("Order not found with %s", orderId)));
+        customerOrder.setRemark(remark);
+        customerOrderRepo.save(customerOrder);
+    }
+
+    @Override
+    public void manageStatus(String status, String orderId) {
+        CustomerOrder customerOrder =
+                customerOrderRepo.findById(orderId).orElseThrow(()->new RuntimeException(String.format("Order not found with %s", orderId)));
+        OrderStatus orderStatus = orderStatusRepo.findByStatus(status).orElseThrow(() -> new RuntimeException("Order Status Not Found. so you can't place an order please contact admin"));
+        customerOrder.setOrderStatus(orderStatus);
+        customerOrderRepo.save(customerOrder);
+    }
+
+
+    @Override
     public CustomerOrderResponseDto findOrderById(String orderId) {
        CustomerOrder customerOrder =
                customerOrderRepo.findById(orderId).orElseThrow(()->new RuntimeException(String.format("Order not found with %s", orderId)));
