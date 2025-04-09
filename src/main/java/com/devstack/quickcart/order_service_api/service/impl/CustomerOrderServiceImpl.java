@@ -4,6 +4,7 @@ import com.devstack.quickcart.order_service_api.dto.request.CustomerOrderRequest
 import com.devstack.quickcart.order_service_api.dto.request.OrderDetailRequestDto;
 import com.devstack.quickcart.order_service_api.dto.response.CustomerOrderResponseDto;
 import com.devstack.quickcart.order_service_api.dto.response.OrderDetailResponseDto;
+import com.devstack.quickcart.order_service_api.dto.response.paginate.CustomerOrderPaginateDto;
 import com.devstack.quickcart.order_service_api.entity.CustomerOrder;
 import com.devstack.quickcart.order_service_api.entity.OrderDetail;
 import com.devstack.quickcart.order_service_api.entity.OrderStatus;
@@ -12,6 +13,7 @@ import com.devstack.quickcart.order_service_api.repo.OrderStatusRepo;
 import com.devstack.quickcart.order_service_api.service.CustomerOrderService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.Order;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,6 +59,19 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         CustomerOrder customerOrder =
                 customerOrderRepo.findById(orderId).orElseThrow(()->new RuntimeException(String.format("Order not found with %s", orderId)));
         customerOrderRepo.delete(customerOrder);
+    }
+
+    @Override
+    public CustomerOrderPaginateDto searchAll(String searchText, int page, int size) {
+        return CustomerOrderPaginateDto.builder()
+                .count(
+                        customerOrderRepo.searchCount(searchText)
+                )
+                .dataList(
+                        customerOrderRepo.searchAll(searchText, PageRequest.of(page,size))
+                                .stream().map(this::toCustomerOrderResponseDto).collect(Collectors.toList())
+                )
+                .build();
     }
 
     private CustomerOrderResponseDto toCustomerOrderResponseDto(CustomerOrder customerOrder) {
