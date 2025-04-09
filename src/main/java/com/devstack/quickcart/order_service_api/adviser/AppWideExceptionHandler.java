@@ -13,7 +13,7 @@ public class AppWideExceptionHandler {
     public ResponseEntity<StandardResponseDto> handleEntryNotFoundException(EntryNotFoundException e) {
         return new ResponseEntity<>(
                 new StandardResponseDto(
-                        200,e.getMessage(),
+                        404,e.getMessage(),
                         e
                 ), HttpStatus.NOT_FOUND
         );
