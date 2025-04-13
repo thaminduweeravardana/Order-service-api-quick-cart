@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface OrderStatusRepo extends JpaRepository<OrderStatus, String> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM order_status WHERE status=?1")
-    public Optional<OrderStatus> findByStatus(String status);
+    public Optional<OrderStatus>findByStatus(String status);
 
 }

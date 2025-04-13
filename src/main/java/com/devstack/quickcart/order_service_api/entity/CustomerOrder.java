@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class CustomerOrder {
     @Id
-    @Column(name="order_id", unique=true, nullable=false, length=80)
+    @Column(name="order_id", unique=true, nullable=false, length = 80)
     private String orderId;
     @Column(name="order_date", nullable=false, columnDefinition = "DATETIME")
     private Date orderDate;

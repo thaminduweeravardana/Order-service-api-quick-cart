@@ -77,8 +77,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
     @Override
     public CustomerOrderResponseDto findOrderById(String orderId) {
-       CustomerOrder customerOrder =
-               customerOrderRepo.findById(orderId).orElseThrow(()->new EntryNotFoundException(String.format("Order not found with %s", orderId)));
+       CustomerOrder customerOrder = customerOrderRepo.findById(orderId)
+               .orElseThrow(()->new EntryNotFoundException(String.format("Order not found with %s", orderId)));
         return toCustomerOrderResponseDto(customerOrder);
     }
 
@@ -114,8 +114,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                 .orderDetails(
                         customerOrder.getProducts().stream().map(this::toOrderDetailResponseDto).collect(Collectors.toList())
                 )
-                .remark(customerOrder.getRemark())
                 .status(customerOrder.getOrderStatus().getStatus())
+                .remark(customerOrder.getRemark())
                 .build();
     }
 

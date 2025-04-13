@@ -15,7 +15,7 @@ public class OrderDetail {
     @Id
     @Column(name="detail_id", unique=true, nullable=false, length=80)
     private String detailId;
-    @Column(name="product_id", nullable=false, length=80)
+    @Column(name="product_id", nullable=false,length = 80)
     private String productId;
     @Column(name="qty", nullable=false)
     private int qty;

@@ -16,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class OrderStatus {
     @Id
-    @Column(name="status_id", unique=true, nullable=false, length=80)
+    @Column(name="status_id", unique=true, nullable=false, length = 80)
     private String statusId;
     @Column(name="status", nullable=false, length=80, unique = true) //PENDING, REJECTED
     private String status;
