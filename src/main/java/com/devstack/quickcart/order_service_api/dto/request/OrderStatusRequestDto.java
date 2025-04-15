@@ -11,6 +11,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderStatusRequestDto {
+    private String orderId;
     private String status;
     private ArrayList<CustomerOrderRequestDto> customerOrder;
 }
