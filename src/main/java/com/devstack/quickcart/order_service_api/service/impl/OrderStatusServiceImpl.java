@@ -26,13 +26,16 @@ public class OrderStatusServiceImpl implements OrderStatusService {
 
     @Override
     public void createStatus(OrderStatusRequestDto requestDto) {
-        Set<CustomerOrder> customerOrderSet = customerOrderRepo.findByOrderId(requestDto.getOrderId())
-                .stream().collect(Collectors.toSet());
+        CustomerOrder customerOrder = customerOrderRepo.findByOrderId(requestDto.getOrderId())
+                .orElseThrow(() -> new EntryNotFoundException("Order Not Found. so you can't place an order details please contact admin"));
 
         OrderStatus orderStatus = new OrderStatus();
-        orderStatus.setStatusId(UUID.randomUUID().toString());
-        orderStatus.setStatus(requestDto.getStatus());
-        orderStatus.setCustomerOrders(customerOrderSet);
+         orderStatus.setStatusId(UUID.randomUUID().toString());
+         orderStatus.setStatus(requestDto.getStatus());
+         orderStatus.setCustomerOrders(
+                requestDto.getCustomerOrder().stream()
+                        .map(e->createCustomerOrder(customerOrder)).collect(Collectors.toSet())
+        );
         orderStatusRepo.save(orderStatus);
     }
 
@@ -54,5 +57,21 @@ public class OrderStatusServiceImpl implements OrderStatusService {
     @Override
     public OrderStatusPaginateDto searchAll(int page, int size) {
         return null;
+    }
+
+    private CustomerOrder createCustomerOrder(CustomerOrder customerOrder){
+        if(customerOrder == null){
+            return null;
+        }
+
+        return CustomerOrder.builder()
+                .orderId(UUID.randomUUID().toString())
+                .orderDate(customerOrder.getOrderDate())
+                .orderStatus(customerOrder.getOrderStatus())
+                .products(customerOrder.getProducts())
+                .remark(customerOrder.getRemark())
+                .totalAmount(customerOrder.getTotalAmount())
+                .userId(customerOrder.getUserId())
+                .build();
     }
 }
