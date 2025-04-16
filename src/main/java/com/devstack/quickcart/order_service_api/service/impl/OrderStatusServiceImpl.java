@@ -14,6 +14,7 @@ import com.devstack.quickcart.order_service_api.repo.CustomerOrderRepo;
 import com.devstack.quickcart.order_service_api.repo.OrderStatusRepo;
 import com.devstack.quickcart.order_service_api.service.OrderStatusService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -58,12 +59,29 @@ public class OrderStatusServiceImpl implements OrderStatusService {
 
     @Override
     public void deleteById(String statusId) {
-
+        OrderStatus orderStatus = orderStatusRepo.findById(statusId)
+                .orElseThrow(() -> new EntryNotFoundException(String.format("Order status not found %s", statusId)));
+        orderStatusRepo.delete(orderStatus);
     }
 
     @Override
-    public OrderStatusPaginateDto searchAll(int page, int size) {
-        return null;
+    public OrderStatusPaginateDto searchAll(String searchText, int page, int size) {
+        return OrderStatusPaginateDto.builder()
+                .count(
+                        orderStatusRepo.searchCount(searchText)
+                )
+                .dataList(
+                        orderStatusRepo.searchAll(searchText, PageRequest.of(page,size)).stream()
+
+
+                )
+                .build();
+    }
+
+    private OrderStatusResponseDto toOrderStatusResponseDto(OrderStatus orderStatus){
+        if(customerOrder == null){
+            return null;
+        }
     }
 
     private CustomerOrder createCustomerOrder(CustomerOrder customerOrder){
@@ -86,7 +104,6 @@ public class OrderStatusServiceImpl implements OrderStatusService {
        if(orderStatus == null){
            return null;
        }
-
        return  OrderStatusResponseDto.builder()
                .statusId(orderStatus.getStatusId())
                .status(orderStatus.getStatus())
@@ -98,7 +115,6 @@ public class OrderStatusServiceImpl implements OrderStatusService {
         if(customerOrder == null){
             return null;
         }
-
         return CustomerOrderResponseDto.builder()
                 .orderId(customerOrder.getOrderId())
                 .orderDate(customerOrder.getOrderDate())

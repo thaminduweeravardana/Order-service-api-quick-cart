@@ -9,5 +9,5 @@ public interface OrderStatusService {
     public void updateStatus(OrderStatusRequestDto requestDto, String statusId);
     public OrderStatusResponseDto findStatusById(String statusId);
     public void deleteById(String statusId);
-    public OrderStatusPaginateDto searchAll(int page, int size);
+    public OrderStatusPaginateDto searchAll(String searchText, int page, int size);
 }
