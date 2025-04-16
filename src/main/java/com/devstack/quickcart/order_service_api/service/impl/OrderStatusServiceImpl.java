@@ -1,6 +1,6 @@
 package com.devstack.quickcart.order_service_api.service.impl;
 
-import com.devstack.quickcart.order_service_api.dto.request.OrderDetailRequestDto;
+
 import com.devstack.quickcart.order_service_api.dto.request.OrderStatusRequestDto;
 import com.devstack.quickcart.order_service_api.dto.response.CustomerOrderResponseDto;
 import com.devstack.quickcart.order_service_api.dto.response.OrderDetailResponseDto;
@@ -72,16 +72,9 @@ public class OrderStatusServiceImpl implements OrderStatusService {
                 )
                 .dataList(
                         orderStatusRepo.searchAll(searchText, PageRequest.of(page,size)).stream()
-
-
+                                .map(this::toOrderStatusResponseDto).toList()
                 )
                 .build();
-    }
-
-    private OrderStatusResponseDto toOrderStatusResponseDto(OrderStatus orderStatus){
-        if(customerOrder == null){
-            return null;
-        }
     }
 
     private CustomerOrder createCustomerOrder(CustomerOrder customerOrder){
