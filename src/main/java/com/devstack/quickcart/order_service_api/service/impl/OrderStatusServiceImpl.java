@@ -38,7 +38,10 @@ public class OrderStatusServiceImpl implements OrderStatusService {
 
     @Override
     public void updateStatus(OrderStatusRequestDto requestDto, String statusId) {
-
+        OrderStatus orderStatus = orderStatusRepo.findById(statusId)
+                .orElseThrow(() -> new EntryNotFoundException(String.format("Order status not found with %s", statusId)));
+        orderStatus.setStatus(requestDto.getStatus());
+        orderStatusRepo.save(orderStatus);
     }
 
     @Override

@@ -44,7 +44,6 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
         orderDetail.setQty(requestDto.getQty());
         orderDetail.setUnitPrice(requestDto.getUnitPrice());
         orderDetail.setDiscount(requestDto.getDiscount());
-
         orderDetailRepo.save(orderDetail);
     }
 
