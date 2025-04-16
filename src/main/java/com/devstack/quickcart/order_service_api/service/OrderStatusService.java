@@ -7,7 +7,7 @@ import com.devstack.quickcart.order_service_api.dto.response.paginate.OrderStatu
 public interface OrderStatusService {
     public void createStatus(OrderStatusRequestDto requestDto);
     public void updateStatus(OrderStatusRequestDto requestDto, String statusId);
-    public OrderStatusResponseDto findOrderById(String statusId);
+    public OrderStatusResponseDto findStatusById(String statusId);
     public void deleteById(String statusId);
     public OrderStatusPaginateDto searchAll(int page, int size);
 }

@@ -1,9 +1,13 @@
 package com.devstack.quickcart.order_service_api.service.impl;
 
+import com.devstack.quickcart.order_service_api.dto.request.OrderDetailRequestDto;
 import com.devstack.quickcart.order_service_api.dto.request.OrderStatusRequestDto;
+import com.devstack.quickcart.order_service_api.dto.response.CustomerOrderResponseDto;
+import com.devstack.quickcart.order_service_api.dto.response.OrderDetailResponseDto;
 import com.devstack.quickcart.order_service_api.dto.response.OrderStatusResponseDto;
 import com.devstack.quickcart.order_service_api.dto.response.paginate.OrderStatusPaginateDto;
 import com.devstack.quickcart.order_service_api.entity.CustomerOrder;
+import com.devstack.quickcart.order_service_api.entity.OrderDetail;
 import com.devstack.quickcart.order_service_api.entity.OrderStatus;
 import com.devstack.quickcart.order_service_api.exception.EntryNotFoundException;
 import com.devstack.quickcart.order_service_api.repo.CustomerOrderRepo;
@@ -45,8 +49,11 @@ public class OrderStatusServiceImpl implements OrderStatusService {
     }
 
     @Override
-    public OrderStatusResponseDto findOrderById(String statusId) {
-        return null;
+    public OrderStatusResponseDto findStatusById(String statusId) {
+        OrderStatus orderStatus = orderStatusRepo
+                .findById(statusId)
+                .orElseThrow(() -> new EntryNotFoundException(String.format("Order status not found %s",statusId)));
+        return toOrderStatusResponseDto(orderStatus);
     }
 
     @Override
@@ -74,4 +81,47 @@ public class OrderStatusServiceImpl implements OrderStatusService {
                 .userId(customerOrder.getUserId())
                 .build();
     }
+
+    private OrderStatusResponseDto toOrderStatusResponseDto(OrderStatus orderStatus){
+       if(orderStatus == null){
+           return null;
+       }
+
+       return  OrderStatusResponseDto.builder()
+               .statusId(orderStatus.getStatusId())
+               .status(orderStatus.getStatus())
+               .customerOrders(orderStatus.getCustomerOrders().stream().map(this ::orderToResponseDto).toList())
+               .build();
+    }
+
+    private CustomerOrderResponseDto orderToResponseDto(CustomerOrder customerOrder){
+        if(customerOrder == null){
+            return null;
+        }
+
+        return CustomerOrderResponseDto.builder()
+                .orderId(customerOrder.getOrderId())
+                .orderDate(customerOrder.getOrderDate())
+                .userId(customerOrder.getUserId())
+                .totalAmount(customerOrder.getTotalAmount())
+                .status(customerOrder.getOrderStatus().getStatus())
+                .orderDetails(customerOrder.getProducts().stream().map(this::toOrderDetailResponseDto).toList())
+                .remark(customerOrder.getRemark())
+                .build();
+    }
+
+    private OrderDetailResponseDto toOrderDetailResponseDto(OrderDetail orderDetail) {
+        if (orderDetail == null) {
+            return null;
+        }
+        return OrderDetailResponseDto.builder()
+                .productId(orderDetail.getProductId())
+                .detailId(orderDetail.getDetailId())
+                .discount(orderDetail.getDiscount())
+                .qty(orderDetail.getQty())
+                .unitPrice(orderDetail.getUnitPrice())
+                .build();
+    }
+
 }
+
