@@ -6,10 +6,7 @@ import com.devstack.quickcart.order_service_api.util.StandardResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/order-status")
@@ -25,5 +22,14 @@ public class OrderStatusController {
                         201,"Status has been created",null
                 ), HttpStatus.CREATED
          );
+    }
+
+    @GetMapping("/visitors/find-by-id/{id}")
+    public ResponseEntity<StandardResponseDto> findById(@PathVariable String id){
+        return new ResponseEntity<>(
+                new StandardResponseDto(
+                        200,"Order status details",orderStatusService.findStatusById(id)
+                ),HttpStatus.OK
+        );
     }
 }
