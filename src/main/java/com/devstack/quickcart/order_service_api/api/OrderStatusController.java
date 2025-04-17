@@ -52,4 +52,13 @@ public class OrderStatusController {
                 ),HttpStatus.NO_CONTENT
         );
     }
+
+    @GetMapping("/visitors/search-all")
+    public ResponseEntity<StandardResponseDto> searchAll(@RequestParam String searchText, @RequestParam int page,@RequestParam int size){
+        return new ResponseEntity<>(
+                new StandardResponseDto(
+                        200,"Order status list",orderStatusService.searchAll(searchText,page,size)
+                ),HttpStatus.OK
+        );
+    }
 }
