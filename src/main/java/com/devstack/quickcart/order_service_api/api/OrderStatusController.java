@@ -42,4 +42,14 @@ public class OrderStatusController {
                 ),HttpStatus.OK
         );
     }
+
+    @DeleteMapping("/business/delete-by-id/{id}")
+    public ResponseEntity<StandardResponseDto> deleteBYId(@PathVariable String id){
+        orderStatusService.deleteById(id);
+        return new ResponseEntity<>(
+                new StandardResponseDto(
+                        204,"Order status has been deleted",null
+                ),HttpStatus.NO_CONTENT
+        );
+    }
 }
