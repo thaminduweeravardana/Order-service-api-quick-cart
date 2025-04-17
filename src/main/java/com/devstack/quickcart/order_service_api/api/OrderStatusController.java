@@ -32,4 +32,14 @@ public class OrderStatusController {
                 ),HttpStatus.OK
         );
     }
+
+    @PutMapping("/business/update-status/{id}")
+    public ResponseEntity<StandardResponseDto> updateStatus(@RequestBody OrderStatusRequestDto request,@PathVariable String id){
+        orderStatusService.updateStatus(request, id);
+        return new ResponseEntity<>(
+                new StandardResponseDto(
+                        200,"Order status has been updated",null
+                ),HttpStatus.OK
+        );
+    }
 }
